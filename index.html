@@ -59,7 +59,6 @@
         .input-group:last-child { margin-bottom: 0; }
         .input-label { font-size: 0.8rem; font-weight: 800; color: var(--main); margin-bottom: 8px; display: block; text-transform: uppercase; }
         
-        .input-with-unit { position: relative; display: flex; align-items: center; }
         input {
             width: 100%;
             padding: 15px;
@@ -175,6 +174,7 @@
     const clrMinutes = document.getElementById('clr-minutes');
     const clrYears = document.getElementById('clr-years');
     const resultDays = document.getElementById('resultDays');
+    const resultLabel = document.getElementById('resultLabel');
     const resultAdvice = document.getElementById('resultAdvice');
 
     window.addEventListener('load', () => {
@@ -198,10 +198,17 @@
         if (years > 0) localStorage.setItem('fc_leak_years', years);
 
         if (!isNaN(mins) && !isNaN(years) && years > 0) {
-            // 計算: 分 * 365日 * 年数 / 60分 / 24時間
             const totalDays = (mins * 365 * years) / 60 / 24;
             
             resultDays.innerText = formatNum(totalDays);
+            
+            // 単位の自動切り替え表示
+            if (totalDays >= 365) {
+                const totalYears = totalDays / 365;
+                resultLabel.innerText = `≈ ${formatNum(totalYears)} Full Years of life`;
+            } else {
+                resultLabel.innerText = "Full Days (24h)";
+            }
             
             // 絶望のメッセージ
             if (totalDays >= 365) {
@@ -217,6 +224,7 @@
             }
         } else {
             resultDays.innerText = '---';
+            resultLabel.innerText = "Full Days (24h)";
             resultAdvice.innerText = "";
         }
 
